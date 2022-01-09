@@ -8,7 +8,7 @@ import { useStateValue, setPatient } from '../state';
 import { Patient } from '../types';
 
 const PatientPage = () => {
-	const [{ patient }, dispatch] = useStateValue();
+	const [{ patient, diagnoses }, dispatch] = useStateValue();
 	const { patientId } = useParams<{ patientId: string }>();
 	const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
@@ -58,9 +58,15 @@ const PatientPage = () => {
 						<p>{entry.description}</p>
 						{entry.diagnosisCodes && entry.diagnosisCodes.length > 0 && (
 							<ul>
-								{entry.diagnosisCodes.map((diagnosisCode) => (
-									<li key={diagnosisCode}>{diagnosisCode}</li>
-								))}
+								{entry.diagnosisCodes.map((diagnosisCode) => {
+									const diagnosis = diagnoses.find(
+										(diagnosis) => diagnosis.code === diagnosisCode
+									);
+									const listText = diagnosis
+										? `${diagnosisCode} ${diagnosis.name}`
+										: diagnosisCode;
+									return <li key={diagnosisCode}>{listText}</li>;
+								})}
 							</ul>
 						)}
 					</div>
